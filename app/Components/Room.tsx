@@ -4,18 +4,20 @@ import { orchastratorIdStore, organizationIdStore } from '@/store/store';
 import { Button, Modal, Table, TextInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
-const Room = () => {
+const Room = ({ orgId, orchId }: any) => {
     const [opened, { open, close }] = useDisclosure(false);
-    const [organizationIdState, setOrganizationIdState] = useAtom(organizationIdStore)
-    const [orchastratorIdStoreState, setOrchastratorIdStoreState] = useAtom(orchastratorIdStore)
+    const router = useRouter()
+
+
 
 
     const { data }: any = useRoomControllerFindAll({
         path: {
-            organizationId: organizationIdState,
-            orchestratorId: orchastratorIdStoreState
+            organizationId: orgId,
+            orchestratorId: orchId
         }
     })
 
@@ -23,8 +25,8 @@ const Room = () => {
 
 
     const [form, setForm] = useState<any>({
-        organizationId: organizationIdState,
-        orchestratorId: orchastratorIdStoreState,
+        organizationId: orgId,
+        orchestratorId: orchId,
         label: '',
         description: ''
     });
@@ -40,8 +42,8 @@ const Room = () => {
         mutate({
             body: payload,
             path: {
-                organizationId: organizationIdState || form?.organizationId,
-                orchestratorId: orchastratorIdStoreState || form?.orchestratorId
+                organizationId: orgId || form?.organizationId,
+                orchestratorId: orchId || form?.orchestratorId
             },
         });
     };
@@ -49,7 +51,9 @@ const Room = () => {
 
 
     const rows = data && data?.map((item: any) => (
-        <Table.Tr key={item.id}>
+        <Table.Tr key={item.id} onClick={(() => {
+            router.push(`/roomdetails?orgId=${orgId}&orchId=${orchId}&roomId=${item.id}`)
+        })}>
             <Table.Td>{item.id}</Table.Td>
             <Table.Td>{item.label}</Table.Td>
             <Table.Td>{item.description}</Table.Td>
@@ -81,13 +85,13 @@ const Room = () => {
             </div>
             <Modal opened={opened} onClose={close} title="Create Room">
                 <TextInput label="organizationId"
-                    defaultValue={organizationIdState}
-                    disabled={organizationIdState?.length > 0}
+                    defaultValue={orgId}
+                    disabled={orgId?.length > 0}
                     onChange={(e) => setForm({ ...form, organizationId: e.target.value })}
                 />
                 <TextInput label="orchestratorId"
-                    defaultValue={orchastratorIdStoreState}
-                    disabled={orchastratorIdStoreState?.length > 0}
+                    defaultValue={orchId}
+                    disabled={orchId?.length > 0}
                     onChange={(e) => setForm({ ...form, orchestratorId: e.target.value })}
                 />
                 <TextInput label="label"

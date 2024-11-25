@@ -7,11 +7,11 @@ import { CreateOrganizationRequestDto } from "@/src/generated/api/requests";
 import { useEffect, useState } from "react";
 import { organizationIdStore } from "@/store/store";
 import { useAtom } from "jotai";
-import { EllipsisVertical } from 'lucide-react';
-import { editOrg } from "@/services/services";
+import { useRouter } from "next/navigation";
 
 export default function Organization() {
     const [opened, { open, close }] = useDisclosure(false);
+    const router = useRouter()
 
     const [organizationIdState, setOrganizationIdState] = useAtom(organizationIdStore)
     const [editData, setEditData] = useState({})
@@ -54,12 +54,13 @@ export default function Organization() {
 
 
     const rows = data && data?.organizations?.map((item: any) => (
-        <Table.Tr key={item.name} onClick={() => {
+        <Table.Tr className="cursor-pointer" key={item.name} onClick={() => {
             setOrganizationIdState(item.id)
+            router.push(`/orgdetails?id=${item.id}`)
         }}>
             <Table.Td>{item.id}</Table.Td>
             <Table.Td>{item.organizationName}</Table.Td>
-            <Table.Td>
+            {/* <Table.Td>
                 <Menu shadow="md" width={200}>
                     <Menu.Target>
                         <EllipsisVertical size={20} className="cursor-pointer" />
@@ -76,7 +77,7 @@ export default function Organization() {
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
-            </Table.Td>
+            </Table.Td> */}
         </Table.Tr>
     ));
 
@@ -94,7 +95,7 @@ export default function Organization() {
                             <Table.Tr>
                                 <Table.Th>id</Table.Th>
                                 <Table.Th>name</Table.Th>
-                                <Table.Th>action</Table.Th>
+                                {/* <Table.Th>action</Table.Th> */}
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>{rows}</Table.Tbody>

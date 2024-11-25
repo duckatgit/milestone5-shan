@@ -17,14 +17,7 @@ export default async function Home() {
 
   return (
     <main className="flex flex-col items-center justify-between px-24">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Organization />
-        <Orchastrator />
-        <Room />
-      </HydrationBoundary>
-      <Link href="/infinite-loader" className="underline">
-        Go to Infinite Loader &rarr;
-      </Link>
+      <Organization />
     </main>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import '@mantine/core/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,6 +19,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const queryClient = new QueryClient();
+
   return (
     <html lang="en">
       <head>
@@ -25,7 +28,9 @@ export default function RootLayout({
       </head>
       <Providers>
         <MantineProvider>
-          <body className={inter.className}>{children}</body>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <body className={inter.className}>{children}</body>
+          </HydrationBoundary>
         </MantineProvider>
       </Providers>
     </html>

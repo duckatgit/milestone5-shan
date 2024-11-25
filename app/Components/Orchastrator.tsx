@@ -4,12 +4,13 @@ import { orchastratorIdStore, organizationIdStore } from '@/store/store';
 import { Button, Modal, Table, TextInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
-const Orchastrator = () => {
+const Orchastrator = ({ organizationIdState }: { organizationIdState: string }) => {
     const [opened, { open, close }] = useDisclosure(false);
-    const [organizationIdState, setOrganizationIdState] = useAtom(organizationIdStore)
-    const [orchastratorIdStoreState, setOrchastratorIdStoreState] = useAtom(orchastratorIdStore)
+    const router = useRouter()
+
 
     console.log('organizationIdState', organizationIdState)
 
@@ -50,7 +51,7 @@ const Orchastrator = () => {
 
     const rows = data && data?.map((item: any) => (
         <Table.Tr key={item.id} onClick={() => {
-            setOrchastratorIdStoreState(item?.id)
+            router.push(`/orchestratordetails?orgId=${organizationIdState}&orchId=${item.id}`)
         }}>
             <Table.Td>{item.id}</Table.Td>
             <Table.Td>{item.label}</Table.Td>
